@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+
+  mydb:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - mydb:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      tags:
+        - lalyos/select:latest
+        - lalyos/select:v1
+        - select
+    image: select
+    environment:
+      - ENVIRON=${ENVIRON}
+    ports:
+      - 80
+
+networks:
+  default:
+   name: infra
+   
+volumes:
+  mydb:    
